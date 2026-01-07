@@ -1,0 +1,17 @@
+{
+    "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+    "python.terminal.activateEnvironment": false,
+    "terminal.integrated.env.linux": {
+        "CONDA_AUTO_ACTIVATE_BASE": "false",
+    },
+    "terminal.integrated.profiles.linux": {
+        "Project Conda": {
+            "path": "bash",
+            "args": [
+                "--rcfile",
+                "${workspaceFolder}/.vscode/init_terminal.sh"
+            ]
+        }
+    },
+    "terminal.integrated.defaultProfile.linux": "Project Conda"
+}
