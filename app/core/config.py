@@ -7,6 +7,7 @@ from pydantic import computed_field
 
 load_dotenv()
 
+
 class Configs(BaseSettings):
     # Project name
     PROJECT_NAME: str
@@ -20,15 +21,15 @@ class Configs(BaseSettings):
     POSTGRES_PASSWORD: str
     POSTGRES_DB: str
     POSTGRES_PORT: int
-    
+
     # Other config
     TZ: str = "Asia/Singapore"
-    
+
     @computed_field
     @property
     def DATABASE_URL(self) -> str:
         return f"postgresql://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@localhost:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
-    
+
     class Config:
         env_file = ".env"
         case_sensitive = True
