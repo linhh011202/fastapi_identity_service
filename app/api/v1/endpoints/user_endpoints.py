@@ -7,6 +7,8 @@ from app.dto.base_response import BaseResponse
 from app.dto.user.request.get_user_request import GetUserRequest
 from app.dto.user.request.register_request import RegisterRequest
 from app.dto.user.response.get_user_response import GetUserResponse
+from app.dto.user.response.login_response import LoginResponse
+from app.dto.user.response.register_response import RegisterResponse
 from app.service.user_service import UserService
 from app.dto.user.request.login_request import LoginRequest  # thêm import
 
@@ -35,12 +37,13 @@ def get_user_by_username(
     )
 
 
-@router.post("/register", response_model=BaseResponse[GetUserResponse])
+@router.post("/register", response_model=BaseResponse[RegisterResponse])
 @inject
 def register_user(
+    #
     request: RegisterRequest,
     user_service: UserService = Depends(Provide[Container.user_service]),
-) -> BaseResponse[GetUserResponse] | JSONResponse:
+) -> BaseResponse[RegisterResponse] | JSONResponse:
     user, err = user_service.register_user(request.username, request.password)
     if err:
         return JSONResponse(
@@ -50,17 +53,17 @@ def register_user(
             ).model_dump(),
         )
     return BaseResponse.success_response(
-        data=GetUserResponse.model_validate(user),
+        data=RegisterResponse.model_validate(user),
         message="User registered successfully",
     )
 
 
-@router.post("/login", response_model=BaseResponse[GetUserResponse])
+@router.post("/login", response_model=BaseResponse[LoginResponse])
 @inject
 def login(
     request: LoginRequest,
     user_service: UserService = Depends(Provide[Container.user_service]),
-) -> BaseResponse[GetUserResponse] | JSONResponse:
+) -> BaseResponse[LoginResponse] | JSONResponse:
     user, err = user_service.login(request.username, request.password)
     if err:
         return JSONResponse(
@@ -70,6 +73,6 @@ def login(
             ).model_dump(),
         )
     return BaseResponse.success_response(
-        data=GetUserResponse.model_validate(user),
+        data=LoginResponse.model_validate(user),
         message="Login successful",
     )
