@@ -7,14 +7,13 @@ from app.core.config import configs
 from app.core.container import Container
 from app.util.class_object import singleton
 
+from starlette.middleware.cors import CORSMiddleware
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    handlers=[
-        logging.StreamHandler(sys.stdout),
-        logging.FileHandler("app.log")
-    ]
+    handlers=[logging.StreamHandler(sys.stdout), logging.FileHandler("app.log")],
 )
 logger = logging.getLogger(__name__)
 
@@ -23,7 +22,7 @@ logger = logging.getLogger(__name__)
 class AppCreator:
     def __init__(self):
         logger.info("Initializing FastAPI application...")
-        
+
         # set app default
         self.app = FastAPI(
             title=configs.PROJECT_NAME,
@@ -38,6 +37,16 @@ class AppCreator:
         self.db = self.container.db()
         logger.info("Database and container initialized successfully")
 
+        # set CORS middleware
+        logger.info("Configuring CORS middleware...")
+        self.app.add_middleware(
+            CORSMiddleware,
+            allow_origins=configs.BACKEND_CORS_ORIGINS,
+            allow_credentials=True,
+            allow_methods=["*"],
+            allow_headers=["*"],
+        )
+        logger.info("CORS middleware configured successfully")
 
         # set routes
         @self.app.get("/")
