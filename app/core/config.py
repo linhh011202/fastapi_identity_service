@@ -24,6 +24,9 @@ class Configs(BaseSettings):
     # Other config
     TZ: str = "Asia/Singapore"
     
+    # BACKEND_CORS_ORIGINS is a JSON-formatted list of origins
+    BACKEND_CORS_ORIGINS: List[str] = ["*"]
+    
     @computed_field
     @property
     def DATABASE_URL(self) -> str:
