@@ -8,6 +8,7 @@ from app.core.container import Container
 from app.util.class_object import singleton
 
 from starlette.middleware.cors import CORSMiddleware
+from sqlmodel import SQLModel
 
 # Configure logging
 logging.basicConfig(
@@ -36,6 +37,13 @@ class AppCreator:
         self.container.wire(modules=[__name__])
         self.db = self.container.db()
         logger.info("Database and container initialized successfully")
+
+        # auto-create tables
+        try:
+            SQLModel.metadata.create_all(self.db.engine)
+            logger.info("Database tables ensured via SQLModel.metadata.create_all")
+        except Exception as e:
+            logger.error(f"Failed to create tables: {e}")
 
         # set CORS middleware
         logger.info("Configuring CORS middleware...")
